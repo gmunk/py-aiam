@@ -1,0 +1,292 @@
+{
+  "states": [
+    {
+      "name": "Oradea",
+      "actions": [
+        {
+          "name": "ToZerind",
+          "cost": 71
+        },
+        {
+          "name": "ToSibiu",
+          "cost": 151
+        }
+      ]
+    },
+    {
+      "name": "Zerind",
+      "actions": [
+        {
+          "name": "ToOradea",
+          "cost": 71
+        },
+        {
+          "name": "ToArad",
+          "cost": 75
+        }
+      ]
+    },
+    {
+      "name": "Arad",
+      "actions": [
+        {
+          "name": "ToZerind",
+          "cost": 75
+        },
+        {
+          "name": "ToSibiu",
+          "cost": 140
+        },
+        {
+          "name": "ToTimisoara",
+          "cost": 118
+        }
+      ]
+    },
+    {
+      "name": "Timisoara",
+      "actions": [
+        {
+          "name": "ToArad",
+          "cost": 118
+        },
+        {
+          "name": "ToLugoj",
+          "cost": 111
+        }
+      ]
+    },
+    {
+      "name": "Lugoj",
+      "actions": [
+        {
+          "name": "ToMehadia",
+          "cost": 70
+        },
+        {
+          "name": "ToTimisoara",
+          "cost": 111
+        }
+      ]
+    },
+    {
+      "name": "Mehadia",
+      "actions": [
+        {
+          "name": "ToLugoj",
+          "cost": 70
+        },
+        {
+          "name": "ToDrobeta",
+          "cost": 75
+        }
+      ]
+    },
+    {
+      "name": "Drobeta",
+      "actions": [
+        {
+          "name": "ToMehadia",
+          "cost": 75
+        },
+        {
+          "name": "ToCraiova",
+          "cost": 120
+        }
+      ]
+    },
+    {
+      "name": "Craiova",
+      "actions": [
+        {
+          "name": "ToPitesti",
+          "cost": 138
+        },
+        {
+          "name": "ToDrobeta",
+          "cost": 120
+        },
+        {
+          "name": "ToRimnicuVileca",
+          "cost": 146
+        }
+      ]
+    },
+    {
+      "name": "Rimnicu Vilcea",
+      "actions": [
+        {
+          "name": "ToCraiova",
+          "cost": 1
+        },
+        {
+          "name": "ToSibiu",
+          "cost": 1
+        },
+        {
+          "name": "ToPitesti",
+          "cost": 1
+        }
+      ]
+    },
+    {
+      "name": "Sibiu",
+      "actions": [
+        {
+          "name": "ToOradea",
+          "cost": 151
+        },
+        {
+          "name": "ToRimnicuVileca",
+          "cost": 80
+        },
+        {
+          "name": "ToArad",
+          "cost": 140
+        },
+        {
+          "name": "ToFagaras",
+          "cost": 99
+        }
+      ]
+    },
+    {
+      "name": "Fagars",
+      "actions": [
+        {
+          "name": "ToSibiu",
+          "cost": 99
+        },
+        {
+          "name": "ToBucharest",
+          "cost": 211
+        }
+      ]
+    },
+    {
+      "name": "Pitesti",
+      "actions": [
+        {
+          "name": "ToCraiova",
+          "cost": 138
+        },
+        {
+          "name": "ToBucharest",
+          "cost": 101
+        },
+        {
+          "name": "ToRimnicuVileca",
+          "cost": 97
+        }
+      ]
+    },
+    {
+      "name": "Giurgiu",
+      "actions": [
+        {
+          "name": "ToBucharest",
+          "cost": 90
+        }
+      ]
+    },
+    {
+      "name": "Bucharest",
+      "actions": [
+        {
+          "name": "ToGiurgiu",
+          "cost": 90
+        },
+        {
+          "name": "ToFagaras",
+          "cost": 211
+        },
+        {
+          "name": "ToPitesti",
+          "cost": 101
+        },
+        {
+          "name": "ToUrziceni",
+          "cost": 85
+        }
+      ]
+    },
+    {
+      "name": "Urziceni",
+      "actions": [
+        {
+          "name": "ToBucharest",
+          "cost": 85
+        },
+        {
+          "name": "ToHirsova",
+          "cost": 98
+        },
+        {
+          "name": "ToVaslui",
+          "cost": 142
+        }
+      ]
+    },
+    {
+      "name": "Vaslui",
+      "actions": [
+        {
+          "name": "ToUrziceni",
+          "cost": 142
+        },
+        {
+          "name": "ToIasi",
+          "cost": 92
+        }
+      ]
+    },
+    {
+      "name": "Iasi",
+      "actions": [
+        {
+          "name": "ToVaslui",
+          "cost": 92
+        },
+        {
+          "name": "ToNeamt",
+          "cost": 87
+        }
+      ]
+    },
+    {
+      "name": "Neamt",
+      "actions": [
+        {
+          "name": "ToIasi",
+          "cost": 87
+        }
+      ]
+    },
+    {
+      "name": "Hirsova",
+      "actions": [
+        {
+          "name": "ToUrziceni",
+          "cost": 98
+        },
+        {
+          "name": "ToEforie",
+          "cost": 86
+        }
+      ]
+    },
+    {
+      "name": "Eforie",
+      "actions": [
+        {
+          "name": "ToHirsova",
+          "cost": 86
+        }
+      ]
+    }
+  ],
+  "initial_state": "Arad",
+  "goal_states": [
+    "Bucharest"
+  ]
+}

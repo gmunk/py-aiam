@@ -1,8 +1,7 @@
 import unittest
-from collections import namedtuple
-from agents.agent import TableDrivenAgentActions, TableDrivenAgent
+from agents.agent import VacuumPerception, TableDrivenAgentActions, TableDrivenAgent
 from agents.reflex_agent import ReflexVacuumAgentStates, ReflexVacuumAgentLocations, ReflexVacuumAgentActions, \
-    ReflexVacuumAgent
+    ReflexVacuumAgent, SimpleReflexAgent
 from agents.exceptions import TableDrivenAgentError, ReflexVacuumAgentLocationError
 
 
@@ -24,13 +23,15 @@ class TestTableDrivenAgent(unittest.TestCase):
 
 class TestReflexVacuumAgent(unittest.TestCase):
     def test_agent_function(self):
-        Perception = namedtuple("Perception", ["state", "location"])
-
         test_data = [
-            (Perception(ReflexVacuumAgentStates.DIRTY, ReflexVacuumAgentLocations.A), ReflexVacuumAgentActions.SUCK),
-            (Perception(ReflexVacuumAgentStates.CLEAN, ReflexVacuumAgentLocations.A), ReflexVacuumAgentActions.RIGHT),
-            (Perception(ReflexVacuumAgentStates.DIRTY, ReflexVacuumAgentLocations.B), ReflexVacuumAgentActions.SUCK),
-            (Perception(ReflexVacuumAgentStates.CLEAN, ReflexVacuumAgentLocations.B), ReflexVacuumAgentActions.LEFT)]
+            (VacuumPerception(ReflexVacuumAgentStates.DIRTY, ReflexVacuumAgentLocations.A),
+             ReflexVacuumAgentActions.SUCK),
+            (VacuumPerception(ReflexVacuumAgentStates.CLEAN, ReflexVacuumAgentLocations.A),
+             ReflexVacuumAgentActions.RIGHT),
+            (VacuumPerception(ReflexVacuumAgentStates.DIRTY, ReflexVacuumAgentLocations.B),
+             ReflexVacuumAgentActions.SUCK),
+            (VacuumPerception(ReflexVacuumAgentStates.CLEAN, ReflexVacuumAgentLocations.B),
+             ReflexVacuumAgentActions.LEFT)]
 
         agent = ReflexVacuumAgent()
 
@@ -39,4 +40,18 @@ class TestReflexVacuumAgent(unittest.TestCase):
                 self.assertEqual(agent.execute(p), a)
 
         with self.subTest():
-            self.assertRaises(ReflexVacuumAgentLocationError, agent.execute, Perception("Dirty", "C"))
+            self.assertRaises(ReflexVacuumAgentLocationError, agent.execute, VacuumPerception("Dirty", "C"))
+
+
+class TestSimpleReflexAgent(unittest.TestCase):
+    def test_agent_function(self):
+        test_data = [("A", "Action A"), ("B", "Action B")]
+
+        agent = SimpleReflexAgent(rules={
+            "A": "Action A",
+            "B": "Action B"
+        })
+
+        for p, a in test_data:
+            with self.subTest(p=p, a=a):
+                self.assertEqual(agent.execute(p), a)

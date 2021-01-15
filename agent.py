@@ -86,9 +86,9 @@ def create_simple_reflex_agent(rules, parse_perception, match_rule):
     ----------
     rules : dict
         A mapping of rules, it provides an appropriate action for each valid state the agent might be in.
-    parse_perception : function
+    parse_perception : callable
         A function that parses a perception to a description of a state.
-    match_rule : function
+    match_rule : callable
         A function that matches a state description to an action.
 
     Returns

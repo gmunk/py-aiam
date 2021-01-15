@@ -1,57 +1,67 @@
 import unittest
-from agents.agent import VacuumPerception, TableDrivenAgentActions, TableDrivenAgent
-from agents.reflex_agent import ReflexVacuumAgentStates, ReflexVacuumAgentLocations, ReflexVacuumAgentActions, \
-    ReflexVacuumAgent, SimpleReflexAgent
-from agents.exceptions import TableDrivenAgentError, ReflexVacuumAgentLocationError
+from agent import (VacuumPerception,
+                   create_table_driven_agent_program,
+                   create_reflex_vacuum_agent_program,
+                   parse_vacuum_perception,
+                   match_vacuum_rule,
+                   create_simple_reflex_agent)
 
 
-class TestTableDrivenAgent(unittest.TestCase):
-    def test_agent_function(self):
-        test_data = [(1, TableDrivenAgentActions.ACTION_1),
-                     (2, TableDrivenAgentActions.ACTION_2),
-                     (3, TableDrivenAgentActions.ACTION_3)]
+class TestTableDrivenAgentProgram(unittest.TestCase):
+    def test_agent_program(self):
+        p1 = VacuumPerception("A", "Clean")
+        p2 = VacuumPerception("A", "Dirty")
+        p3 = VacuumPerception("B", "Clean")
+        p4 = VacuumPerception("B", "Dirty")
 
-        agent = TableDrivenAgent()
+        a1, a2, a3 = "Suck", "Right", "Left"
 
-        for p, a in test_data:
-            with self.subTest(p=p, a=a):
-                self.assertEqual(agent.execute(p), a)
+        test_data = [(p1, a2), (p3, a3), (p2, a1), (p1, a2), (p4, a1), (p3, None)]
 
-        with self.subTest():
-            self.assertRaises(TableDrivenAgentError, agent.execute, "4")
-
-
-class TestReflexVacuumAgent(unittest.TestCase):
-    def test_agent_function(self):
-        test_data = [
-            (VacuumPerception(ReflexVacuumAgentStates.DIRTY, ReflexVacuumAgentLocations.A),
-             ReflexVacuumAgentActions.SUCK),
-            (VacuumPerception(ReflexVacuumAgentStates.CLEAN, ReflexVacuumAgentLocations.A),
-             ReflexVacuumAgentActions.RIGHT),
-            (VacuumPerception(ReflexVacuumAgentStates.DIRTY, ReflexVacuumAgentLocations.B),
-             ReflexVacuumAgentActions.SUCK),
-            (VacuumPerception(ReflexVacuumAgentStates.CLEAN, ReflexVacuumAgentLocations.B),
-             ReflexVacuumAgentActions.LEFT)]
-
-        agent = ReflexVacuumAgent()
-
-        for p, a in test_data:
-            with self.subTest(p=p, a=a):
-                self.assertEqual(agent.execute(p), a)
-
-        with self.subTest():
-            self.assertRaises(ReflexVacuumAgentLocationError, agent.execute, VacuumPerception("Dirty", "C"))
-
-
-class TestSimpleReflexAgent(unittest.TestCase):
-    def test_agent_function(self):
-        test_data = [("A", "Action A"), ("B", "Action B")]
-
-        agent = SimpleReflexAgent(rules={
-            "A": "Action A",
-            "B": "Action B"
+        agent_program = create_table_driven_agent_program({
+            (p1,): a2,
+            (p1, p3): a3,
+            (p1, p3, p2): a1,
+            (p1, p3, p2, p1): a2,
+            (p1, p3, p2, p1, p4): a1,
         })
 
         for p, a in test_data:
             with self.subTest(p=p, a=a):
-                self.assertEqual(agent.execute(p), a)
+                self.assertEqual(agent_program(p), a)
+
+
+class TestVacuumAgent(unittest.TestCase):
+    __test__ = False
+
+    def setUp(self):
+        self.agent_program = None
+
+    def test_agent_program(self):
+        test_data = [(VacuumPerception("A", "Clean"), "Right"),
+                     (VacuumPerception("A", "Dirty"), "Suck"),
+                     (VacuumPerception("B", "Clean"), "Left"),
+                     (VacuumPerception("B", "Dirty"), "Suck"),
+                     (VacuumPerception("C", "Clean"), None)]
+
+        for p, a in test_data:
+            with self.subTest(p=p, a=a):
+                self.assertEqual(self.agent_program(p), a)
+
+
+class TestReflexVacuumAgent(TestVacuumAgent):
+    __test__ = True
+
+    def setUp(self):
+        self.agent_program = create_reflex_vacuum_agent_program()
+
+
+class TestSimpleReflexAgent(TestVacuumAgent):
+    __test__ = True
+
+    def setUp(self):
+        self.agent_program = create_simple_reflex_agent({"Is Dirty": "Suck",
+                                                         "Is Clean A": "Right",
+                                                         "Is Clean B": "Left"},
+                                                        parse_vacuum_perception,
+                                                        match_vacuum_rule)

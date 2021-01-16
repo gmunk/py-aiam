@@ -1,5 +1,5 @@
 import heapq
-from .node import Node
+from .problem import Node
 
 DEFAULT_PRIORITY = 0
 
@@ -14,17 +14,21 @@ def expand(problem, node):
 
 
 def best_first_search(problem):
-    frontier = []
-    reached = {}
+    node = Node(state=problem.initial_state, parent=None, action=None, path_cost=DEFAULT_PRIORITY)
 
-    heapq.heappush(frontier, (DEFAULT_PRIORITY, Node(state=problem.initial_state, path_cost=DEFAULT_PRIORITY)))
+    reached = {node.state: node}
+    frontier = []
+
+    heapq.heappush(frontier, (DEFAULT_PRIORITY, node))
 
     while frontier:
         node = heapq.heappop(frontier)[1]
+
         if problem.is_goal(node.state):
             return node
         for n in expand(problem, node):
             if n.state not in reached or n.path_cost < reached[n.state].path_cost:
                 reached[n.state] = n
                 heapq.heappush(frontier, (n.path_cost, n))
+
     return None

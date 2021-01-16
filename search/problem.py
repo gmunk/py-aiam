@@ -3,6 +3,8 @@ from collections import namedtuple
 
 Action = namedtuple("Action", ["name", "cost"])
 
+Node = namedtuple("Node", ["state", "parent", "action", "path_cost"])
+
 
 class Problem(ABC):
     """
@@ -35,10 +37,6 @@ class Problem(ABC):
     def apply_action(self, state, action):
         pass
 
-    @abstractmethod
-    def calculate_action_cost(self, state, action, frontier_state):
-        pass
-
 
 class RomanianRoadMapProblem(Problem):
     def __init__(self, states=None, initial_state=None, goal_states=None, actions=None, action_costs=None):
@@ -47,6 +45,3 @@ class RomanianRoadMapProblem(Problem):
 
     def apply_action(self, state, action):
         return action.name[2:]
-
-    def calculate_action_cost(self, state, action, frontier_state):
-        pass

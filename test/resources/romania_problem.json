@@ -107,25 +107,25 @@
           "cost": 120
         },
         {
-          "name": "ToRimnicuVileca",
+          "name": "ToRimnicuVilcea",
           "cost": 146
         }
       ]
     },
     {
-      "name": "Rimnicu Vilcea",
+      "name": "RimnicuVilcea",
       "actions": [
         {
           "name": "ToCraiova",
-          "cost": 1
+          "cost": 146
         },
         {
           "name": "ToSibiu",
-          "cost": 1
+          "cost": 80
         },
         {
           "name": "ToPitesti",
-          "cost": 1
+          "cost": 97
         }
       ]
     },
@@ -137,7 +137,7 @@
           "cost": 151
         },
         {
-          "name": "ToRimnicuVileca",
+          "name": "ToRimnicuVilcea",
           "cost": 80
         },
         {
@@ -151,7 +151,7 @@
       ]
     },
     {
-      "name": "Fagars",
+      "name": "Fagaras",
       "actions": [
         {
           "name": "ToSibiu",
@@ -175,7 +175,7 @@
           "cost": 101
         },
         {
-          "name": "ToRimnicuVileca",
+          "name": "ToRimnicuVilcea",
           "cost": 97
         }
       ]

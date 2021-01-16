@@ -2,7 +2,7 @@ import json
 import unittest
 from collections import defaultdict
 from search.problem import Action, RomanianRoadMapProblem
-from search.node import Node
+from search.problem import Node
 from search.search import DEFAULT_PRIORITY, expand, best_first_search
 
 
@@ -31,10 +31,12 @@ class TestSearchAlgorithms(unittest.TestCase):
     def test_best_first_search(self):
         node = best_first_search(self.problem)
 
+        print(node)
+
         self.assertTrue(node.state in self.problem.goal_states)
 
     def test_expand(self):
-        node = Node(state="Arad", path_cost=DEFAULT_PRIORITY)
+        node = Node(state="Arad", parent=None, action=None, path_cost=DEFAULT_PRIORITY)
         expected = {"Zerind", "Sibiu", "Timisoara"}
 
         for n in expand(self.problem, node):

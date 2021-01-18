@@ -34,14 +34,15 @@ class Problem(ABC):
         return state in self.goal_states
 
     @abstractmethod
-    def apply_action(self, state, action):
+    def apply_action(self, action):
         pass
 
 
 class RomanianRoadMapProblem(Problem):
-    def __init__(self, states=None, initial_state=None, goal_states=None, actions=None, action_costs=None):
-        super().__init__(states, initial_state, goal_states, actions)
-        self.action_costs = action_costs if action_costs is not None else {}
-
-    def apply_action(self, state, action):
+    def apply_action(self, action):
         return action.name[2:]
+
+
+class TreeProblem(Problem):
+    def apply_action(self, action):
+        return action

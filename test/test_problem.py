@@ -1,7 +1,7 @@
-import unittest
 import json
-from unittest.mock import patch
+import unittest
 from collections import defaultdict
+from unittest.mock import patch
 from search.problem import Action, Problem, RomanianRoadMapProblem
 
 
@@ -24,7 +24,9 @@ class TestProblem(unittest.TestCase):
                 self.assertEqual(self.problem.is_goal(s), g)
 
 
-class TestRomanianRoadProblem(unittest.TestCase):
+class TestOnProblemCreatedFromFile(unittest.TestCase):
+    __test__ = False
+
     @classmethod
     def setUpClass(cls):
         with open("resources/romania_problem.json") as f:
@@ -40,6 +42,10 @@ class TestRomanianRoadProblem(unittest.TestCase):
                 for a in s["actions"]:
                     cls.actions[s["name"]].add(Action(a["name"], a["cost"]))
 
+
+class TestRomanianRoadProblem(TestOnProblemCreatedFromFile):
+    __test__ = True
+
     def setUp(self):
         self.problem = RomanianRoadMapProblem(states=self.states,
                                               initial_state=self.initial_state,
@@ -47,9 +53,11 @@ class TestRomanianRoadProblem(unittest.TestCase):
                                               actions=self.actions)
 
     def test_apply_action(self):
-        test_data = [("Arad", Action("ToSibiu", 140), "Sibiu"), ("Sibiu", Action("ToArad", 140), "Arad")]
+        test_data = [(Action("ToSibiu", 140), "Sibiu"),
+                     (Action("ToArad", 140), "Arad"),
+                     (Action("ToRimnicuVilcea", 80), "RimnicuVilcea")]
 
-        for s, a, e in test_data:
-            with self.subTest(s=s, a=a, e=e):
-                state = self.problem.apply_action(s, a)
+        for a, e in test_data:
+            with self.subTest(a=a, e=e):
+                state = self.problem.apply_action(a)
                 self.assertEqual(state, e)

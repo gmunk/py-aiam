@@ -1,9 +1,22 @@
 from abc import ABC, abstractmethod
-from collections import namedtuple
+from dataclasses import dataclass
 
-Action = namedtuple("Action", ["name", "cost"])
 
-Node = namedtuple("Node", ["state", "parent", "action", "path_cost"])
+DEFAULT_PATH_COST = 0
+
+
+@dataclass(frozen=True, eq=True)
+class Action:
+    name: str = None
+    cost: int = DEFAULT_PATH_COST
+
+
+@dataclass(frozen=True, eq=True)
+class Node:
+    state: str = None
+    parent: "Node" = None
+    action: "Action" = None
+    path_cost: int = DEFAULT_PATH_COST
 
 
 class Problem(ABC):
@@ -30,8 +43,8 @@ class Problem(ABC):
         self.goal_states = goal_states if goal_states is not None else set()
         self.actions = actions if actions is not None else {}
 
-    def is_goal(self, state):
-        return state in self.goal_states
+    def is_goal(self, node):
+        return node.state in self.goal_states
 
     @abstractmethod
     def apply_action(self, action):
@@ -45,4 +58,4 @@ class RomanianRoadMapProblem(Problem):
 
 class TreeProblem(Problem):
     def apply_action(self, action):
-        return action
+        return action.name

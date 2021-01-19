@@ -2,8 +2,6 @@ import heapq
 from collections import deque
 from .problem import Node
 
-DEFAULT_PATH_COST = 0
-
 
 def expand(problem, node):
     state = node.state
@@ -15,17 +13,17 @@ def expand(problem, node):
 
 
 def best_first_search(problem):
-    node = Node(state=problem.initial_state, parent=None, action=None, path_cost=DEFAULT_PATH_COST)
+    node = Node(state=problem.initial_state)
 
     reached = {node.state: node}
     frontier = []
 
-    heapq.heappush(frontier, (DEFAULT_PATH_COST, node))
+    heapq.heappush(frontier, (node.path_cost, node))
 
     while frontier:
         node = heapq.heappop(frontier)[1]
 
-        if problem.is_goal(node.state):
+        if problem.is_goal(node):
             return node
         for n in expand(problem, node):
             if n.state not in reached or n.path_cost < reached[n.state].path_cost:
@@ -36,9 +34,9 @@ def best_first_search(problem):
 
 
 def breadth_first_search(problem):
-    node = Node(state=problem.initial_state, parent=None, action=None, path_cost=DEFAULT_PATH_COST)
+    node = Node(state=problem.initial_state)
 
-    if problem.is_goal(node.state):
+    if problem.is_goal(node):
         return node
 
     frontier = deque([node])
@@ -58,9 +56,9 @@ def breadth_first_search(problem):
 
 
 def depth_first_search(problem):
-    node = Node(state=problem.initial_state, parent=None, action=None, path_cost=DEFAULT_PATH_COST)
+    node = Node(state=problem.initial_state)
 
-    if problem.is_goal(node.state):
+    if problem.is_goal(node):
         return node
 
     frontier = deque([node])
@@ -68,7 +66,7 @@ def depth_first_search(problem):
     while frontier:
         node = frontier.pop()
 
-        if problem.is_goal(node.state):
+        if problem.is_goal(node):
             return node
 
         for n in expand(problem, node):

@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-
 DEFAULT_PATH_COST = 0
 
 
@@ -59,3 +58,13 @@ class RomanianRoadMapProblem(Problem):
 class TreeProblem(Problem):
     def apply_action(self, action):
         return action.name
+
+
+def get_path_to(node):
+    path = []
+
+    while node:
+        path.append(node.state)
+        node = node.parent
+
+    return path

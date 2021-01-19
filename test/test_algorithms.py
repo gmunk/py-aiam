@@ -1,5 +1,8 @@
-from search.problem import RomanianRoadMapProblem, TreeProblem
-from search.problem import Node, Action
+from search.problem import (RomanianRoadMapProblem,
+                            TreeProblem,
+                            Node,
+                            Action,
+                            get_path_to)
 from search.algorithms import (expand,
                                best_first_search,
                                breadth_first_search,
@@ -22,8 +25,16 @@ class TestBestFirstSearch(TestOnProblemCreatedFromFile):
             self.assertTrue(n.state in expected)
 
     def test_best_first_search(self):
-        node = best_first_search(self.problem)
-        self.assertTrue(self.problem.is_goal(node.state))
+        test_data = [({"Bucharest"}, ["Bucharest", "Pitesti", "RimnicuVilcea", "Sibiu", "Arad"]),
+                     ({"Craiova"}, ["Craiova", "RimnicuVilcea", "Sibiu", "Arad"]),
+                     ({"Arad"}, ["Arad"])]
+
+        for g, p in test_data:
+            with self.subTest("The computed path to the goal is incorrect.", g=g, p=p):
+                self.problem.goal_states = g
+
+                node = best_first_search(self.problem)
+                self.assertEqual(get_path_to(node), p)
 
 
 class TestBreadthFirstSearch(TestOnProblemCreatedFromFile):
@@ -34,15 +45,22 @@ class TestBreadthFirstSearch(TestOnProblemCreatedFromFile):
                                               actions=self.actions)
 
     def test_breadth_first_search(self):
-        node = breadth_first_search(self.problem)
-        self.assertTrue(self.problem.is_goal(node.state))
+        test_data = [({"Bucharest"}, ["Bucharest", "Fagaras", "Sibiu", "Arad"]),
+                     ({"Craiova"}, ["Craiova", "RimnicuVilcea", "Sibiu", "Arad"]),
+                     ({"Arad"}, ["Arad"])]
+
+        for g, p in test_data:
+            with self.subTest("The computed path to the goal is incorrect.", g=g, p=p):
+                self.problem.goal_states = g
+
+                node = breadth_first_search(self.problem)
+                self.assertEqual(get_path_to(node), p)
 
 
 class TestDepthFirstSearch(TestOnProblemCreatedFromFile):
     def setUp(self):
         self.problem = TreeProblem(states={"A", "B", "C", "D", "E", "F", "G"},
                                    initial_state="A",
-                                   goal_states={"M"},
                                    actions={"A": {Action(name="B"), Action(name="C")},
                                             "B": {Action(name="D"), Action(name="E")},
                                             "C": {Action(name="F"), Action(name="G")},
@@ -52,5 +70,13 @@ class TestDepthFirstSearch(TestOnProblemCreatedFromFile):
                                             "G": {Action(name="N"), Action(name="O")}})
 
     def test_depth_first_search(self):
-        node = depth_first_search(self.problem)
-        self.assertTrue(self.problem.is_goal(node.state))
+        test_data = [({"M"}, ["M", "F", "C", "A"]),
+                     ({"O"}, ["O", "G", "C", "A"]),
+                     ({"A"}, ["A"])]
+
+        for g, p in test_data:
+            with self.subTest("The computed path to the goal is incorrect.", g=g, p=p):
+                self.problem.goal_states = g
+
+                node = depth_first_search(self.problem)
+                self.assertEqual(get_path_to(node), p)

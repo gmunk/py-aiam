@@ -46,7 +46,7 @@ def breadth_first_search(problem):
         node = frontier.popleft()
 
         for n in expand(problem, node):
-            if problem.is_goal(n.state):
+            if problem.is_goal(n):
                 return n
             if n.state not in reached:
                 reached.add(n.state)
@@ -56,12 +56,7 @@ def breadth_first_search(problem):
 
 
 def depth_first_search(problem):
-    node = Node(state=problem.initial_state)
-
-    if problem.is_goal(node):
-        return node
-
-    frontier = deque([node])
+    frontier = deque([Node(state=problem.initial_state)])
 
     while frontier:
         node = frontier.pop()

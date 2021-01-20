@@ -1,4 +1,6 @@
+import json
 from abc import ABC, abstractmethod
+from collections import defaultdict
 from dataclasses import dataclass
 
 DEFAULT_PATH_COST = 0
@@ -50,7 +52,7 @@ class Problem(ABC):
         pass
 
 
-class RomanianRoadMapProblem(Problem):
+class RoadMapProblem(Problem):
     def apply_action(self, action):
         return action.name[2:]
 
@@ -58,6 +60,23 @@ class RomanianRoadMapProblem(Problem):
 class TreeProblem(Problem):
     def apply_action(self, action):
         return action.name
+
+
+def create_road_map_problem(file):
+    problem_json = json.load(file)
+
+    states = set()
+    actions = defaultdict(set)
+
+    for s in problem_json["states"]:
+        states.add(s["name"])
+        for a in s["actions"]:
+            actions[s["name"]].add(Action(a["name"], a["cost"]))
+
+    return RoadMapProblem(states=states,
+                          initial_state=problem_json["initial_state"],
+                          goal_states=set(problem_json["goal_states"]),
+                          actions=actions)
 
 
 def get_path_to(node):

@@ -54,7 +54,11 @@ class Problem(ABC):
 
 class RoadMapProblem(Problem):
     def apply_action(self, action):
-        return action.name[2:]
+        state = action.name[2:]
+
+        if state not in self.states:
+            raise ValueError
+        return state
 
 
 class TreeProblem(Problem):
@@ -77,6 +81,23 @@ def create_road_map_problem(file):
                           initial_state=problem_json["initial_state"],
                           goal_states=set(problem_json["goal_states"]),
                           actions=actions)
+
+
+def create_tree_problem(states, initial_state=None, goal_states=None):
+    number_parents = int(len(states) / 2)
+
+    actions = {states[i]: set() for i in range(number_parents)}
+
+    sts = states[1:]
+    for i, k in enumerate(actions):
+        actions[k].update([Action(name=s) for s in sts[i * 2:(i * 2) + 2]])
+
+    return TreeProblem(
+        states=set(states),
+        initial_state=initial_state,
+        goal_states=goal_states,
+        actions=actions
+    )
 
 
 def get_path_to(node):

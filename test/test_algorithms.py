@@ -1,7 +1,8 @@
+import string
 import unittest
 
-from search.algorithms import (best_first_search, breadth_first_search)
-from search.problem import (get_path_to, create_road_map_problem)
+from search.algorithms import (best_first_search, breadth_first_search, depth_first_search)
+from search.problem import (get_path_to, create_road_map_problem, create_tree_problem)
 
 
 class TestSearchAlgorithm(unittest.TestCase):
@@ -49,3 +50,12 @@ class TestBreadthFirstSearch(TestSearchAlgorithm):
                           ({"Craiova"}, ["Craiova", "RimnicuVilcea", "Sibiu", "Arad"]),
                           ({"Arad"}, ["Arad"])]
         self.algorithm = breadth_first_search
+
+
+class TestDepthFirstSearch(TestSearchAlgorithm):
+    __test__ = True
+
+    def setUp(self):
+        self.test_data = [({"M"}, ["M", "F", "C", "A"])]
+        self.problem = create_tree_problem(list(string.ascii_uppercase[:15]), initial_state="A")
+        self.algorithm = depth_first_search

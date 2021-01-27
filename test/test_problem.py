@@ -1,7 +1,8 @@
 import unittest
 from unittest.mock import patch
 
-from search.problem import Problem, RoadMapProblem, Node, Action
+from search.node import Node, Action
+from search.problem import Problem, RoadMapProblem
 
 
 class TestProblem(unittest.TestCase):

@@ -1,6 +1,10 @@
-from collections import namedtuple
+from dataclasses import dataclass
 
-VacuumPerception = namedtuple("VacuumPerception", ["location", "status"])
+
+@dataclass(frozen=True, eq=True)
+class VacuumPerception:
+    location: str = None
+    status: str = None
 
 
 def create_table_driven_agent_program(table):

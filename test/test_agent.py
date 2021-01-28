@@ -32,7 +32,12 @@ class TestTableDrivenAgentProgram(unittest.TestCase):
 
 
 class TestVacuumAgent(unittest.TestCase):
-    __test__ = False
+    @classmethod
+    def setUpClass(cls):
+        if cls is TestVacuumAgent:
+            raise unittest.SkipTest("%s is an abstract base class" % cls.__name__)
+        else:
+            super(TestVacuumAgent, cls).setUpClass()
 
     def setUp(self):
         self.agent_program = None
@@ -50,15 +55,11 @@ class TestVacuumAgent(unittest.TestCase):
 
 
 class TestReflexVacuumAgent(TestVacuumAgent):
-    __test__ = True
-
     def setUp(self):
         self.agent_program = create_reflex_vacuum_agent_program()
 
 
 class TestSimpleReflexAgent(TestVacuumAgent):
-    __test__ = True
-
     def setUp(self):
         self.agent_program = create_simple_reflex_agent({"Is Dirty": "Suck",
                                                          "Is Clean A": "Right",

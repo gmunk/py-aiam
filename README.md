@@ -22,6 +22,8 @@ but in general the code here is as unique as possible.
 | Best-First Search (Uniform-Cost)    | ✅             | ✅                 |
 | Breadth-First Search                | ✅             | ✅                 |
 | Depth-First Search                  | ✅             | ✅                 |
+| Depth-Limited Search                | ✅             | ✅                 |
+| Iterative-deepening Search          | ✅             | ✅                 |
 
 ## Tests
 This project aims to cover its codebase with unit tests which are the recommended way to experiment and 

@@ -1,6 +1,7 @@
 import heapq
 from collections import deque
-from .problem import Node
+
+from search.node import Node, cutoff
 
 
 def expand(problem, node):
@@ -128,3 +129,65 @@ def depth_first_search(problem):
             frontier.append(n)
 
     return None
+
+
+def depth_limited_search(problem, limit):
+    """Depth-limited search implementation.
+
+    Parameters
+    ----------
+    problem : Problem
+        The problem which this implementation searches.
+    limit : Int
+        Depth limit, if a node is in a larger depth than this limit,
+        the algorithm treats it like it doesn't have any children.
+
+    Returns
+    -------
+    Node
+        The goal node, if the function finds a solution, if the depth of the problem's
+        tree is larger than the function returns a cutoff node
+        which means there might be a solution in a deeper level.
+        If the algorithm doesn't find a solution, it returns None.
+    """
+    result = None
+
+    frontier = deque([Node(state=problem.initial_state)])
+
+    while frontier:
+        node = frontier.pop()
+
+        if problem.is_goal(node):
+            return node
+        if node.get_depth() >= limit:
+            result = cutoff
+        elif not node.is_cycle():
+            for n in expand(problem, node):
+                frontier.append(n)
+
+    return result
+
+
+def iterative_deepening_search(problem):
+    """Iterative-deepening search implementation.
+
+    This algorithm uses depth-limited search with a different limit, starting from zero and incrementing up.
+
+
+    Parameters
+    ----------
+    problem : Problem
+        The problem which this implementation searches.
+
+    Returns
+    -------
+    Node
+        The goal node, if the function finds a solution, else None.
+    """
+    depth = 0
+
+    while True:
+        node = depth_limited_search(problem, depth)
+        if node != cutoff:
+            return node
+        depth += 1

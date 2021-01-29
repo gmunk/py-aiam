@@ -24,6 +24,7 @@ class Node:
         Path cost, from the root, to this node.
 
     """
+
     def __init__(self, state=None, parent=None, action=None, path_cost=DEFAULT_PATH_COST):
         self.state = state
         self.parent = parent
@@ -31,10 +32,10 @@ class Node:
         self.path_cost = path_cost
 
     def __eq__(self, other):
-        return self.state == self.state \
-               and self.parent == self.parent \
-               and self.action == self.action \
-               and self.path_cost == self.path_cost
+        return self.state == other.state \
+               and self.parent == other.parent \
+               and self.action == other.action \
+               and self.path_cost == other.path_cost
 
     def get_path(self):
         """Returns the path from this node to the root (omitting this node).
@@ -81,3 +82,6 @@ class Node:
         """
         path = self.get_path()
         return any(s == self.state for s in path)
+
+
+cutoff = Node(state="cutoff")

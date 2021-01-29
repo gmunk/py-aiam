@@ -35,7 +35,7 @@ class TestVacuumAgent(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         if cls is TestVacuumAgent:
-            raise unittest.SkipTest("%s is an abstract base class" % cls.__name__)
+            raise unittest.SkipTest("{} is an abstract base class".format(cls.__name__))
         else:
             super(TestVacuumAgent, cls).setUpClass()
 

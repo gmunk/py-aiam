@@ -19,11 +19,13 @@ but in general the code here is as unique as possible.
 | Table Driven Agent                  | ✅             | ✅                 |
 | Reflex Vacuum Agent                 | ✅             | ✅                 |
 | Simple Reflex Agent                 | ✅             | ✅                 |
-| Best-First Search (Uniform-Cost)    | ✅             | ✅                 |
-| Breadth-First Search                | ✅             | ✅                 |
-| Depth-First Search                  | ✅             | ✅                 |
-| Depth-Limited Search                | ✅             | ✅                 |
+| Best-first Search (Uniform-cost)    | ✅             | ✅                 |
+| Breadth-first Search                | ✅             | ✅                 |
+| Depth-first Search                  | ✅             | ✅                 |
+| Depth-limited Search                | ✅             | ✅                 |
 | Iterative-deepening Search          | ✅             | ✅                 |
+| Bidirectional best-first Search     | ❌             | ❌                 |
+
 
 ## Tests
 This project aims to cover its codebase with unit tests which are the recommended way to experiment and 

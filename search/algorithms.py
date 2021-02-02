@@ -191,3 +191,48 @@ def iterative_deepening_search(problem):
         if node != cutoff:
             return node
         depth += 1
+
+
+# --- NOT READY ---
+def bidirectional_best_first_search(problem):
+    forwards_dir = "F"
+    backwards_dir = "B"
+
+    def is_terminated(r, ff, fb):
+        return r is not None and ff.pop().path_cost + fb.pop().path_cost > r.path_cost
+
+    def proceed(d, p, f, r1, r2, r):
+        node = f.pop()
+
+        for n in expand(p, node):
+            if n.state not in r1 or n.path_cost < r1[n.state].path_cost:
+                r1[n.state] = n
+                heapq.heappush(f, (n.path_cost, n))
+                if n.state in r2:
+                    pass
+
+        return r
+
+    result = None
+
+    node_forwards = Node(state=problem.initial_state)
+
+    frontier_forwards = []
+    heapq.heappush(frontier_forwards, (node_forwards.path_cost, node_forwards))
+
+    reached_forwards = {node_forwards.state: node_forwards}
+
+    frontier_backwards, reached_backwards = [], {}
+
+    for gs in problem.goal_states:
+        node_backwards = Node(state=gs)
+        heapq.heappush(frontier_backwards, (node_backwards.path_cost, node_backwards))
+
+        reached_backwards[node_backwards.state] = node_backwards
+
+    while not is_terminated(result, frontier_forwards, frontier_backwards):
+        result = proceed(forwards_dir, problem, frontier_forwards, reached_forwards, reached_backwards, result) \
+            if frontier_forwards.pop().path_cost < frontier_backwards.pop().path_cost \
+            else proceed(backwards_dir, problem, frontier_backwards, reached_backwards, reached_forwards, result)
+
+    return result

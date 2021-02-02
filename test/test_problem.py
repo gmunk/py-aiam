@@ -18,6 +18,12 @@ class TestProblem(unittest.TestCase):
             with self.subTest(n=n, e=e):
                 self.assertEqual(self.problem.is_goal(n), e)
 
+    # def test_reverse_problem(self):
+    #     self.problem.initial_state = "S1"
+    #
+    #     reversed_problem = reverse_problem(self.problem)
+    #     self.assertEqual(reversed_problem.)
+
 
 class TestRoadMapProblem(unittest.TestCase):
     def setUp(self):
@@ -28,7 +34,7 @@ class TestRoadMapProblem(unittest.TestCase):
         valid_action, valid_expected = (Action(name="ToS2"), "S2")
         invalid_action, invalid_expected = (Action(name="ToS3"), "S3")
 
-        with self.subTest("Incorrect state after applying an action.",
+        with self.subTest("Should have applied the action correctly.",
                           valid_action=valid_action,
                           valid_expected=valid_expected):
             self.assertEqual(self.problem.apply_action(valid_action), valid_expected)
@@ -37,4 +43,3 @@ class TestRoadMapProblem(unittest.TestCase):
                           invalid_action=invalid_action,
                           invalid_expected=invalid_expected):
             self.assertRaises(ValueError, self.problem.apply_action, invalid_action)
-

@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 from search.algorithms import (best_first_search, breadth_first_search, depth_first_search, depth_limited_search,
-                               iterative_deepening_search)
+                               iterative_deepening_search, bidirectional_best_first_search)
 from search.node import cutoff
 from search.problem import (create_road_map_problem, create_tree_problem)
 
@@ -23,7 +23,7 @@ class TestSearchAlgorithm(unittest.TestCase):
 
     def test_algorithm(self):
         for g, p in self.test_data:
-            with self.subTest("Should have returned a correct path to the goal.", g=g, p=p):
+            with self.subTest("Should have returned the correct path to the goal.", g=g, p=p):
                 self.problem.goal_states = g
 
                 node = self.algorithm(self.problem)
@@ -72,13 +72,13 @@ class TestDepthLimitedSearch(unittest.TestCase):
         problem = create_tree_problem(list(string.ascii_uppercase[:15]), initial_state="A")
 
         for lim, g, p in test_data:
-            with self.subTest("Should have returned a correct path to the goal.", lim=lim, g=g, p=p):
+            with self.subTest("Should have returned the correct path to the goal.", lim=lim, g=g, p=p):
                 problem.goal_states = g
 
                 node = depth_limited_search(problem, lim)
                 self.assertEqual(node.get_path(), p)
 
-        with self.subTest("Should have returned a cutoff, meaning a solution might be found deeper than the limit.", lim=cl, g=cg):
+        with self.subTest("Should have returned a cutoff, the solution might be deeper than the limit.", lim=cl, g=cg):
             problem.goal_states = cg
 
             node = depth_limited_search(problem, cl)
@@ -90,3 +90,14 @@ class TestIterativeDeepeningSearch(TestSearchAlgorithm):
         self.test_data = [({"M"}, ["F", "C", "A"])]
         self.problem = create_tree_problem(list(string.ascii_uppercase[:15]), initial_state="A")
         self.algorithm = iterative_deepening_search
+
+
+@unittest.skip("Skipping because implementation is not ready")
+class TestBidirectionalBestFirstSearch(TestSearchAlgorithm):
+    @classmethod
+    def setUpClass(cls):
+        with Path(__file__).parent.joinpath("resources", "romania_problem.json").open("r") as f:
+            cls.problem = create_road_map_problem(f)
+
+    def setUp(self):
+        self.algorithm = bidirectional_best_first_search

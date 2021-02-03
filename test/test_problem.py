@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch
 
 from search.node import Node, Action
-from search.problem import Problem, RoadMapProblem
+from search.problem import Problem, RoadMapProblem, EightQueensProblem
 
 
 class TestProblem(unittest.TestCase):
@@ -12,17 +12,11 @@ class TestProblem(unittest.TestCase):
                                goal_states={"S3"})
 
     def test_is_goal(self):
-        test_data = [(Node(state="S3"), True), (Node(state="S1"), False)]
+        test_data = [("S3", True), ("S1", False)]
 
-        for n, e in test_data:
-            with self.subTest(n=n, e=e):
-                self.assertEqual(self.problem.is_goal(n), e)
-
-    # def test_reverse_problem(self):
-    #     self.problem.initial_state = "S1"
-    #
-    #     reversed_problem = reverse_problem(self.problem)
-    #     self.assertEqual(reversed_problem.)
+        for s, e in test_data:
+            with self.subTest(s=s, e=e):
+                self.assertEqual(self.problem.is_goal(s), e)
 
 
 class TestRoadMapProblem(unittest.TestCase):
@@ -43,3 +37,15 @@ class TestRoadMapProblem(unittest.TestCase):
                           invalid_action=invalid_action,
                           invalid_expected=invalid_expected):
             self.assertRaises(ValueError, self.problem.apply_action, invalid_action)
+
+
+class TestEightQueensProblem(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        queen_positions = [(3, 3), (4, 0), (4, 4), (5, 1), (5, 5), (5, 7), (6, 2), (6, 6)]
+        initial_state = [[0] * 8 for i in range(8)]
+
+        for p in queen_positions:
+            initial_state[p[0]][p[1]] = -1
+
+        cls.problem = EightQueensProblem(initial_state=initial_state)

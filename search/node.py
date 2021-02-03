@@ -10,7 +10,7 @@ class Action:
 
 
 class Node:
-    """Represents a node in the graph (tree) of a problem.
+    """Represents a node in a graph (tree) of a problem.
 
     Parameters
     ----------

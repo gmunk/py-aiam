@@ -55,7 +55,7 @@ def best_first_search(problem):
     while frontier:
         node = heapq.heappop(frontier)[1]
 
-        if problem.is_goal(node):
+        if problem.is_goal(node.state):
             return node
         for n in expand(problem, node):
             if n.state not in reached or n.path_cost < reached[n.state].path_cost:
@@ -83,7 +83,7 @@ def breadth_first_search(problem):
     """
     node = Node(state=problem.initial_state)
 
-    if problem.is_goal(node):
+    if problem.is_goal(node.state):
         return node
 
     frontier = deque([node])
@@ -93,7 +93,7 @@ def breadth_first_search(problem):
         node = frontier.popleft()
 
         for n in expand(problem, node):
-            if problem.is_goal(n):
+            if problem.is_goal(n.state):
                 return n
             if n.state not in reached:
                 reached.add(n.state)
@@ -122,7 +122,7 @@ def depth_first_search(problem):
     while frontier:
         node = frontier.pop()
 
-        if problem.is_goal(node):
+        if problem.is_goal(node.state):
             return node
 
         for n in expand(problem, node):
@@ -157,7 +157,7 @@ def depth_limited_search(problem, limit):
     while frontier:
         node = frontier.pop()
 
-        if problem.is_goal(node):
+        if problem.is_goal(node.state):
             return node
         if node.get_depth() >= limit:
             result = cutoff

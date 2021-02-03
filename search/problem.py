@@ -29,8 +29,8 @@ class Problem(ABC):
         self.goal_states = goal_states if goal_states is not None else set()
         self.actions = actions if actions is not None else {}
 
-    def is_goal(self, node):
-        return node.state in self.goal_states
+    def is_goal(self, state):
+        return state in self.goal_states
 
     @abstractmethod
     def apply_action(self, action):
@@ -49,6 +49,11 @@ class RoadMapProblem(Problem):
 class TreeProblem(Problem):
     def apply_action(self, action):
         return action.name
+
+
+class EightQueensProblem(Problem):
+    def apply_action(self, action):
+        pass
 
 
 def create_road_map_problem(file):

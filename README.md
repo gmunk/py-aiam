@@ -19,11 +19,11 @@ but in general the code here is as unique as possible.
 | Table Driven Agent                  | ✅             | ✅                 |
 | Reflex Vacuum Agent                 | ✅             | ✅                 |
 | Simple Reflex Agent                 | ✅             | ✅                 |
-| Best-first Search (Uniform-cost)    | ✅             | ✅                 |
-| Breadth-first Search                | ✅             | ✅                 |
-| Depth-first Search                  | ✅             | ✅                 |
-| Depth-limited Search                | ✅             | ✅                 |
-| Iterative-deepening Search          | ✅             | ✅                 |
+| Best-first Search (Uniform-cost)    | ❌             | ❌                 |
+| Breadth-first Search                | ❌             | ❌                 |
+| Depth-first Search                  | ❌             | ❌                 |
+| Depth-limited Search                | ❌             | ❌                 |
+| Iterative-deepening Search          | ❌             | ❌                 |
 | Bidirectional best-first Search     | ❌             | ❌                 |
 
 

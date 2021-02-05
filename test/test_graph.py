@@ -9,13 +9,15 @@ class TestGraph(unittest.TestCase):
         self.connections = [("A", "B"), ("A", "C"), ("B", "D"), ("D", "E")]
 
     def test_get_nodes(self):
-        expected = {"A", "B", "C", "D", "E"}
+        expected = {s for c in self.connections for s in c}
+
         graph = Graph(self.connections)
 
         self.assertEqual(graph.get_nodes(), expected)
 
     def test_get_connections(self):
-        test_data = [("A", {("B", math.inf), ("C", math.inf)}), ("Z", set())]
+        test_data = [(self.connections[0][0], set([(c[1], math.inf) for c in self.connections[:2]])), ("Z", set())]
+
         graph = Graph(self.connections)
 
         for n, e in test_data:

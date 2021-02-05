@@ -33,8 +33,8 @@ class Node:
     def get_path(self):
         """Returns the path from this node to the root (omitting this node).
 
-        For example if this is node C and the path is "A" -> "B" -> "C", this function will return
-        a list–["B", "A"]
+        For example if this is node C and the path is "A" -> "B" -> "C",
+        this function will return a list–["B", "A"]
 
         Returns
         -------
@@ -61,6 +61,11 @@ class Node:
         """
         path = self.get_path()
         return any(s == self.state for s in path)
+
+    def expand(self, problem):
+        for a in problem.get_actions(self.state):
+            frontier_state = problem.apply_action(a)
+            yield Node(state=frontier_state, parent=self, action=a, path_cost=self.path_cost + a[1])
 
 
 cutoff = Node(state="cutoff")

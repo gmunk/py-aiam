@@ -1,3 +1,5 @@
+import math
+
 DEFAULT_PATH_COST = 0
 DEFAULT_DEPTH = 0
 
@@ -63,9 +65,27 @@ class Node:
         return any(s == self.state for s in path)
 
     def expand(self, problem):
+        """Expands the nodes that are one step away from this one.
+
+        This function also calculates the path cost from the root to each node it expands,
+        if the action to reach an expanded node doesn't have a cost (represented as math.inf),
+        it sets the expanded path cost to the parent's path cost (this node it the parent).
+
+        Parameters
+        ----------
+        problem : Problem
+            The problem which this node is a part of.
+
+        Yields
+        -------
+        Node
+            A descendant, one step away, of this node.
+        """
         for a in problem.get_actions(self.state):
             frontier_state = problem.apply_action(a)
-            yield Node(state=frontier_state, parent=self, action=a, path_cost=self.path_cost + a[1])
+            cost = self.path_cost if a[1] == math.inf else self.path_cost + a[1]
+
+            yield Node(state=frontier_state, parent=self, action=a, path_cost=cost)
 
 
 cutoff = Node(state="cutoff")

@@ -1,3 +1,4 @@
+import math
 from unittest import TestCase
 from unittest.mock import Mock
 
@@ -33,9 +34,13 @@ class TestNode(TestCase):
                 self.assertEqual(n.is_cycle(), e)
 
     def test_expand(self):
-        actions = {("A", 1), ("B", 1)}
+        actions = {("A", 1), ("B", 1), ("C", math.inf)}
         states = [a[0] for a in actions]
-        expected = tuple([Node(state=a[0], parent=self.node, action=a, path_cost=a[1]) for a in actions])
+        expected = tuple([
+            Node(
+                state=a[0],
+                parent=self.node,
+                action=a, path_cost=a[1] if a[1] != math.inf else self.node.path_cost) for a in actions])
 
         mock_problem = Mock(spec_set=Problem)
         mock_problem.get_actions.return_value = actions

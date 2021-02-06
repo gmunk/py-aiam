@@ -30,7 +30,7 @@ def create_table_driven_agent_program(table):
 
         Parameters
         ----------
-        perception : dtype
+        perception : obj
             A representation of a perception.
 
         Returns
@@ -39,6 +39,7 @@ def create_table_driven_agent_program(table):
             A description of an action.
         """
         perception_sequence.append(perception)
+
         return table.get(tuple(perception_sequence))
 
     return execute
@@ -58,7 +59,7 @@ def create_reflex_vacuum_agent_program():
 
         Parameters
         ----------
-        perception : dtype
+        perception : obj
             A representation of a perception.
 
         Returns
@@ -90,9 +91,9 @@ def create_simple_reflex_agent(rules, parse_perception, match_rule):
     ----------
     rules : dict
         A mapping of rules, it provides an appropriate action for each valid state the agent might be in.
-    parse_perception : callable
+    parse_perception : function
         A function that parses a perception to a description of a state.
-    match_rule : callable
+    match_rule : function
         A function that matches a state description to an action.
 
     Returns

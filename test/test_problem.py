@@ -2,11 +2,11 @@ import unittest
 from unittest.mock import patch, Mock
 
 from graph import Graph
-from search.problem import Problem, GraphProblem
+from problem.problem import Problem, GraphProblem
 
 
 class TestProblem(unittest.TestCase):
-    @patch("search.problem.Problem.__abstractmethods__", set())
+    @patch("problem.problem.Problem.__abstractmethods__", set())
     def setUp(self):
         self.problem = Problem("S1", {"S3"})
 

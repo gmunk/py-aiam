@@ -9,11 +9,11 @@ class Node:
 
     Parameters
     ----------
-    state : str
+    state : obj
         The state which this node represents.
-    parent : Node
+    parent : problem.node.Node
         Parent of this node.
-    action : Action
+    action : tuple
         The action executed to reach this node.
     path_cost : int
         Path cost, from the root, to this node.

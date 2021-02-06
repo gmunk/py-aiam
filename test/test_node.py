@@ -2,8 +2,8 @@ import math
 from unittest import TestCase
 from unittest.mock import Mock
 
-from search.node import Node
-from search.problem import Problem
+from problem.node import Node
+from problem.problem import Problem
 
 
 class TestNode(TestCase):

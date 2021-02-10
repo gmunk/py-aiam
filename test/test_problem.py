@@ -1,11 +1,11 @@
-import unittest
+from unittest import TestCase
 from unittest.mock import patch, Mock
 
 from graph import Graph
-from problem.problem import Problem, GraphProblem
+from problem.problem import Problem, GraphProblem, calculate_non_attacking_pairs
 
 
-class TestProblem(unittest.TestCase):
+class TestProblem(TestCase):
     @patch("problem.problem.Problem.__abstractmethods__", set())
     def setUp(self):
         self.problem = Problem("S1", {"S3"})
@@ -19,7 +19,7 @@ class TestProblem(unittest.TestCase):
                 self.assertEqual(self.problem.is_goal(s), e)
 
 
-class TestGraphProblem(unittest.TestCase):
+class TestGraphProblem(TestCase):
     def setUp(self):
         self.mock_graph = Mock(spec_set=Graph)
         self.mock_graph.get_nodes.return_value = {"S1", "S2", "S3", "S4"}
@@ -57,3 +57,15 @@ class TestGraphProblem(unittest.TestCase):
 
         with self.subTest("Should have raised an exception.", invalid_action=invalid_action):
             self.assertRaises(ValueError, self.problem.get_action_cost, invalid_action)
+
+
+class TestNQueensProblem(TestCase):
+    def test_calculate_non_attacking_pairs(self):
+        test_data = [((1, 3, 6, 3, 7, 4, 4, 1), 24),
+                     ((2, 1, 6, 4, 1, 3, 0, 0), 23),
+                     ((1, 3, 3, 0, 4, 0, 1, 3), 20),
+                     ((2, 1, 4, 3, 2, 1, 0, 2), 11)]
+
+        for s, e in test_data:
+            with self.subTest("Should have calculated the correct number of non attacking pair of queens.", s=s, e=e):
+                self.assertEqual(calculate_non_attacking_pairs(s), e)

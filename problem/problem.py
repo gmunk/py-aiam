@@ -57,3 +57,14 @@ class GraphProblem(Problem):
         if action[0] not in self.graph.get_nodes():
             raise ValueError
         return action[1]
+
+
+def calculate_non_attacking_pairs(state):
+    result = 0
+
+    for c, r in enumerate(state):
+        for c1, r1 in enumerate(state[c + 1:], start=c + 1):
+            if c != c1 and r != r1 and abs(r - r1) != abs(c - c1):
+                result += 1
+
+    return result

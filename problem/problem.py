@@ -1,3 +1,4 @@
+import random
 from abc import ABC, abstractmethod
 
 
@@ -59,11 +60,17 @@ class GraphProblem(Problem):
         return action[1]
 
 
+def create_n_queens_states(n, population_size):
+    return ["".join([str(random.randint(1, n)) for _ in range(n)]) for _ in range(population_size)]
+
+
 def calculate_non_attacking_pairs(state):
     result = 0
 
     for c, r in enumerate(state):
         for c1, r1 in enumerate(state[c + 1:], start=c + 1):
+            r, r1 = int(r), int(r1)
+
             if c != c1 and r != r1 and abs(r - r1) != abs(c - c1):
                 result += 1
 

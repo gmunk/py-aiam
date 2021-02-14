@@ -2,7 +2,7 @@ from unittest import TestCase
 from unittest.mock import patch, Mock
 
 from graph import Graph
-from problem.problem import Problem, GraphProblem, calculate_non_attacking_pairs
+from problem.problem import Problem, GraphProblem, calculate_non_attacking_pairs, create_n_queens_states
 
 
 class TestProblem(TestCase):
@@ -60,11 +60,20 @@ class TestGraphProblem(TestCase):
 
 
 class TestNQueensProblem(TestCase):
+    def test_create_n_queens_states(self):
+        test_data = [(8, 100), (3, 10)]
+
+        for n, p in test_data:
+            states = create_n_queens_states(n, p)
+
+            with self.subTest("Should have generated a population with the provided length.", p=p):
+                self.assertEqual(len(states), p)
+
+            with self.subTest("Should have generated n-sized states", n=n):
+                self.assertFalse(any(len(s) > n or len(s) < n for s in states))
+
     def test_calculate_non_attacking_pairs(self):
-        test_data = [((1, 3, 6, 3, 7, 4, 4, 1), 24),
-                     ((2, 1, 6, 4, 1, 3, 0, 0), 23),
-                     ((1, 3, 3, 0, 4, 0, 1, 3), 20),
-                     ((2, 1, 4, 3, 2, 1, 0, 2), 11)]
+        test_data = [("24748552", 24), ("32752411", 23), ("24415124", 20), ("32543213", 11)]
 
         for s, e in test_data:
             with self.subTest("Should have calculated the correct number of non attacking pair of queens.", s=s, e=e):

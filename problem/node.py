@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import math
+from typing import Any
 
 DEFAULT_PATH_COST = 0
 DEFAULT_DEPTH = 0
@@ -9,16 +12,21 @@ class Node:
 
     Parameters
     ----------
-    state : obj
+    state : Any
         The state which this node represents.
     parent : problem.node.Node
         Parent of this node.
-    action : tuple
+    action : tuple[str, float]
         The action executed to reach this node.
-    path_cost : int
+    path_cost : float
         Path cost, from the root, to this node.
     """
-    def __init__(self, state=None, parent=None, action=None, path_cost=DEFAULT_PATH_COST):
+
+    def __init__(self,
+                 state: Any = None,
+                 parent: Node = None,
+                 action: tuple[str, float] = None,
+                 path_cost: float = DEFAULT_PATH_COST) -> None:
         self.state = state
         self.parent = parent
         self.action = action
@@ -26,11 +34,11 @@ class Node:
         self.depth = DEFAULT_DEPTH if parent is None else parent.depth + 1
 
     def __eq__(self, other):
-        return self.state == other.state \
-               and self.parent == other.parent \
-               and self.action == other.action \
-               and self.path_cost == other.path_cost \
-               and self.depth == other.depth
+        return (self.state == other.state
+                and self.parent == other.parent
+                and self.action == other.action
+                and self.path_cost == other.path_cost
+                and self.depth == other.depth)
 
     def get_path(self):
         """Returns the path from this node to the root (omitting this node).

@@ -21,9 +21,9 @@ but in general the code here is as unique as possible.
 | Simple Reflex Agent                 | ✅             | ✅                 |
 | Best-first Search (Uniform-cost)    | ✅             | ✅                 |
 | Breadth-first Search                | ✅             | ✅                 |
-| Depth-first Search                  | ✅             | ❌                 |
-| Depth-limited Search                | ❌             | ❌                 |
-| Iterative-deepening Search          | ❌             | ❌                 |
+| Depth-first Search                  | ✅             | ✅                 |
+| Depth-limited Search                | ✅             | ✅                 |
+| Iterative-deepening Search          | ✅             | ✅                 |
 | Bidirectional best-first Search     | ❌             | ❌                 |
 | Genetic algorithm                   | ✅             | ✅                 |
 

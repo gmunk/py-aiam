@@ -47,15 +47,15 @@ class GraphProblem(Problem):
         self.graph = graph
 
     def get_actions(self, state):
-        return self.graph.get_connections(state)
+        return self.graph.get_edges(state)
 
     def apply_action(self, action):
-        if action[0] not in self.graph.get_nodes():
+        if action[0] not in self.graph.get_vertices():
             raise ValueError
         return action[0]
 
     def get_action_cost(self, action):
-        if action[0] not in self.graph.get_nodes():
+        if action[0] not in self.graph.get_vertices():
             raise ValueError
         return action[1]
 

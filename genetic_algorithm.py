@@ -1,15 +1,15 @@
 import random
-from collections.abc import Callable, Sequence
+from typing import Sequence, Callable
 
 
-def weight_by(population: Sequence[str], fitness_function: Callable[str]) -> list[float]:
+def weight_by(population: Sequence[str], fitness_function: Callable[[str], float]) -> list[float]:
     """Calculates weights for the individuals of an evolutionary algorithms population.
 
     Parameters
     ----------
     population : Sequence[str]
         Strings over a finite alphabet, representing a population of individuals.
-    fitness_function : Callable[str]
+    fitness_function : Callable[[str], float]
         Called for each individual, provides the weight or how fit this individual is.
 
     Returns
@@ -32,7 +32,7 @@ def choose_parents(population: Sequence[str], weights: Sequence[float]) -> list[
 
     Returns
     -------
-    list[str]
+    list[str, str]
         Two individuals, selected based on probabilities derived from their weights.
     """
     return random.choices(population, weights, k=2)
@@ -91,7 +91,7 @@ def mutate(individual: str, genes: Sequence[str], mutation_rate: float) -> str:
 
 
 def genetic_algorithm(population: Sequence[str],
-                      fitness_function: Callable[str],
+                      fitness_function: Callable[[str], float],
                       genes: Sequence[str],
                       culling_threshold: float = None,
                       fitness_threshold: float = None,
@@ -107,7 +107,7 @@ def genetic_algorithm(population: Sequence[str],
     ----------
     population : Sequence[str]
         Strings over a finite alphabet, representing a population of individuals.
-    fitness_function : Callable[str]
+    fitness_function : Callable[[str], float]
         Function which calculated the weight or how fit this individual is.
     genes : Sequence[str]
         The gene pool from which all individuals are derived.

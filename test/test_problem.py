@@ -22,7 +22,7 @@ class TestProblem(TestCase):
 class TestGraphProblem(TestCase):
     def setUp(self):
         self.mock_graph = Mock(spec_set=Graph)
-        self.mock_graph.get_nodes.return_value = {"S1", "S2", "S3", "S4"}
+        self.mock_graph.get_vertices.return_value = {"S1", "S2", "S3", "S4"}
 
         self.problem = GraphProblem("S1", {"S3"}, self.mock_graph)
 
@@ -31,7 +31,7 @@ class TestGraphProblem(TestCase):
 
         for s, e in test_data:
             with self.subTest("Should have returned the correct actions", s=s, e=e):
-                self.mock_graph.get_connections.return_value = e
+                self.mock_graph.get_edges.return_value = e
                 self.assertEqual(self.problem.get_actions(s), e)
 
     def test_apply_action(self):

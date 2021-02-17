@@ -1,10 +1,12 @@
 import heapq
 from collections import deque
+from typing import Optional
 
 from problem.node import Node
+from problem.problem import Problem
 
 
-def best_first_search(problem):
+def best_first_search(problem: Problem) -> Optional[Node]:
     """Best-first search implementation.
 
     It assumes that the desired behaviour is that of Dijkstra's algorithm (Uniform-cost search).
@@ -19,7 +21,7 @@ def best_first_search(problem):
     Returns
     -------
     problem.node.Node
-        The goal node, if the function finds a solution, else None.
+        Solution node, if the function finds one, else None.
     """
     node = Node(state=problem.initial_state)
 
@@ -41,7 +43,7 @@ def best_first_search(problem):
     return None
 
 
-def breadth_first_search(problem):
+def breadth_first_search(problem: Problem) -> Optional[Node]:
     """Breadth-first search implementation.
 
     The implementation relies on the dequeue data structure for its FIFO queue needs.
@@ -57,7 +59,7 @@ def breadth_first_search(problem):
     Returns
     -------
     problem.node.Node
-        The goal node, if the function finds a solution, else None.
+        Solution node, if the function finds one, else None.
     """
     node = Node(state=problem.initial_state)
 
@@ -76,5 +78,33 @@ def breadth_first_search(problem):
             if e.state not in reached:
                 reached.add(e.state)
                 frontier.append(e)
+
+    return None
+
+
+def depth_first_search(problem: Problem) -> Optional[Node]:
+    """Depth-first search implementation.
+
+    The implementation relies on the dequeue data structure for its need of a LIFO queue.
+
+    Parameters
+    ----------
+    problem: problem.problem.Problem
+        The problem which this implementation searches.
+
+    Returns
+    -------
+    problem.node.Node
+        Solution node, if the function finds one, else None.
+    """
+    frontier = deque([Node(state=problem.initial_state)])
+
+    while frontier:
+        node = frontier.pop()
+
+        if problem.is_goal(node.state):
+            return node
+
+        frontier.extend([n for n in node.expand(problem)])
 
     return None

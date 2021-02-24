@@ -176,3 +176,63 @@ def iterative_deepening_search(problem: Problem) -> Optional[Node]:
         if node is None or node != cutoff:
             return node
         depth += 1
+
+
+def bidirectional_best_first_search(problem_f: Problem, problem_b: Problem) -> Optional[Node]:
+    def has_terminated(s: Optional[Node], f_f: list[(float, Node)], f_b: list[(float, Node)]) -> bool:
+        # Front and Back nodes, this has to be refactored. Maybe create a custom data structure.
+        f, b = f_f[0][1], f_b[0][1]
+        return s and f.path_cost + b.path_cost > s.path_cost
+
+    def join_nodes(direction, nodes: tuple[Node, Node]) -> Node:
+        f, b = nodes if direction == "F" else nodes[::-1]
+
+        join_node = f
+
+        while b.parent is not None:
+            cost = join_node.path_cost + b.path_cost - b.parent.path_cost
+            join_node = Node(b.parent.state, join_node, b.parent.action, cost)
+            b = b.parent
+
+        return join_node
+
+    def proceed(direction,
+                problem: Problem,
+                frontier: list[(float, Node)],
+                reached1: dict[str, Node],
+                reached2: dict[str, Node],
+                solution: Optional[Node]):
+        n = heapq.heappop(frontier)
+
+        for c in n.expand(problem):
+            state = c.state
+            if state not in reached1 or c.path_cost < reached1[state].path_cost:
+                reached1[state] = c
+                heapq.heappush(frontier, (c.path_cost, c))
+                if state in reached2:
+                    joined_solution = join_nodes(direction, (c, reached2[state]))
+                    if joined_solution.path_cost < solution.path_cost:
+                        solution = joined_solution
+
+        return solution
+
+    node_f = Node(problem_f.initial_state)
+    node_b = Node(problem_b.initial_state)
+
+    frontier_f = []
+    frontier_b = []
+    heapq.heappush(frontier_f, (node_f.path_cost, node_f))
+    heapq.heappush(frontier_b, (node_b.path_cost, node_b))
+
+    reached_f = {}
+    reached_b = {}
+
+    result = None
+
+    while not has_terminated(result, frontier_f, frontier_b):
+        if frontier_f[0][1].path_cost < frontier_b[0][1]:
+            result = (proceed("F", problem_f, frontier_f, reached_f, reached_b, result)
+                      if frontier_f[0][1].path_cost < frontier_b[0][1].path_cost
+                      else proceed("B", problem_b, frontier_b, reached_b, reached_f, result))
+
+    return result

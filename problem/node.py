@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import math
-from typing import Any
+from typing import Any, Generator
 
 DEFAULT_PATH_COST = 0
 DEFAULT_DEPTH = 0
@@ -72,7 +72,7 @@ class Node:
         path = self.get_path()
         return any(s == self.state for s in path)
 
-    def expand(self, problem):
+    def expand(self, problem) -> Generator[Node]:
         """Expands the nodes that are one step away from this one.
 
         This function also calculates the path cost from the root to each node it expands,

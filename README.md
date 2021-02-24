@@ -24,7 +24,7 @@ but in general the code here is as unique as possible.
 | Depth-first Search                  | ✅             | ✅                 |
 | Depth-limited Search                | ✅             | ✅                 |
 | Iterative-deepening Search          | ✅             | ✅                 |
-| Bidirectional best-first Search     | ❌             | ❌                 |
+| Bidirectional best-first Search     | ✅             | ❌                 |
 | Genetic algorithm                   | ✅             | ✅                 |
 
 

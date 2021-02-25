@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import patch, Mock
 
-from graph import Graph
+from datastructures import Graph
 from problem.problem import Problem, GraphProblem, calculate_non_attacking_pairs, create_n_queens_states
 
 

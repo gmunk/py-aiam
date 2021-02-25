@@ -1,7 +1,7 @@
 import math
 import unittest
 
-from graph import Graph
+from datastructures import Graph
 
 
 class TestGraph(unittest.TestCase):

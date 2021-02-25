@@ -1,47 +1,8 @@
-import heapq
 from collections import deque
-from typing import Optional, Callable
+from typing import Optional
 
-from problem.node import Node, cutoff, failure
+from problem.node import Node, cutoff
 from problem.problem import Problem
-from search.helpers import proceed
-
-
-def best_first_search(problem: Problem) -> Optional[Node]:
-    """Best-first search implementation.
-
-    It assumes that the desired behaviour is that of Dijkstra's algorithm (Uniform-cost search).
-
-    The implementation relies on the heapq module for its priority queue needs.
-
-    Parameters
-    ----------
-    problem : problem.problem.Problem
-        The problem which the algorithm searches.
-
-    Returns
-    -------
-    Node
-        Solution node, if the function finds one, else None.
-    """
-    node = Node(state=problem.initial_state)
-
-    reached = {node.state: node}
-    frontier = []
-
-    heapq.heappush(frontier, (node.path_cost, node))
-
-    while frontier:
-        n = heapq.heappop(frontier)[1]
-
-        if problem.is_goal(n.state):
-            return n
-        for e in n.expand(problem):
-            if e.state not in reached or e.path_cost < reached[e.state].path_cost:
-                reached[e.state] = e
-                heapq.heappush(frontier, (e.path_cost, e))
-
-    return None
 
 
 def breadth_first_search(problem: Problem) -> Optional[Node]:
@@ -177,59 +138,3 @@ def iterative_deepening_search(problem: Problem) -> Optional[Node]:
         if node is None or node != cutoff:
             return node
         depth += 1
-
-
-def bidirectional_best_first_search(
-        problem_f: Problem,
-        evaluation_function_f: Callable[[Node], float],
-        problem_b: Problem,
-        evaluation_function_b: Callable[[Node], float],
-        has_terminated: Callable[[Node, list[(float, Node)], list[(float, Node)]], bool]) -> Node:
-    """Bidirectional best-first search implementation.
-
-    This implementation is abstract in terms of it needing two evaluation functions and a function
-    to check for termination passed in.
-    The algorithm works by taking two problems, one in the forwards direction and one in the backwards.
-    It maintains two frontiers and two reached dictionaries for each direction.
-    The algorithm terminates when the two reached mappings have the same state in both of them.
-    This check, however, is done in the proceed helper function.
-    The algorithm needs the additional termination check for the cases where the evaluation functions are not the
-    path costs of nodes.
-
-    Parameters
-    ----------
-    problem_f : Problem
-        Problem in the forwards direction (Initial -> Goal)
-    evaluation_function_f : Callable[[Node], float]
-        Cost evaluation function for the forwards problem.
-    problem_b : Problem
-        Problem in the backwards direction (Goal -> Initial)
-    evaluation_function_b : Callable[[Node], float]
-        Cost evaluation function for the backwards problem.
-    has_terminated : Callable[[Node, list[(float, Node)], list[(float, Node)]], bool]
-        Function that check if the found solution is an optimal one.
-
-    Returns
-    -------
-    Node
-        Solution node or failure.
-    """
-    node_f = Node(problem_f.initial_state)
-    node_b = Node(problem_b.initial_state)
-
-    frontier_f = []
-    frontier_b = []
-    heapq.heappush(frontier_f, (node_f.path_cost, node_f))
-    heapq.heappush(frontier_b, (node_b.path_cost, node_b))
-
-    reached_f = {}
-    reached_b = {}
-
-    solution = failure
-
-    while not has_terminated(solution, frontier_f, frontier_b):
-        solution = (proceed("F", problem_f, frontier_f, reached_f, reached_b, solution)
-                    if evaluation_function_f(frontier_f[0][1]) < evaluation_function_b(frontier_b[0][1])
-                    else proceed("B", problem_b, frontier_b, reached_b, reached_f, solution))
-
-    return solution

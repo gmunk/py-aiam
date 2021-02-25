@@ -1,6 +1,68 @@
+import heapq
 import math
 from collections import defaultdict
-from typing import Sequence, Any, Optional
+from typing import Any, Callable, Sequence, Optional, Union
+
+PriorityFunction = Callable[[Any], float]
+Item = tuple[float, Any]
+Items = Union[Any, Item]
+Connections = Union[Sequence[tuple[Any, Any, Optional[float]]], Sequence[tuple[Any, Any]]]
+Edges = set[tuple[Any, float]]
+
+
+class PriorityQueue:
+    """Implementation of a priority queue data structure.
+
+    Based on the heapq module, part of the standard library.
+    This utility class encapsulates the most common interactions with the heapq module.
+
+    Parameters
+    ----------
+    items: list[Any]
+        A list backing the priority queue, can be empty.
+    priority_function : Callable[[Any], float]
+        A function used to calculate the priorities of the items in the queue.
+        The queue is ordered according to these priorities. The first element is the one with the smalles priority.
+    """
+
+    def __init__(self, items: list[Items], priority_function: PriorityFunction) -> None:
+        self.__items = items
+        self.__priority_function = priority_function
+
+        heapq.heapify(self.__items)
+
+    def __len__(self):
+        return len(self.__items)
+
+    def add(self, item: Any) -> None:
+        """Add an element to the priority queue.
+
+        Parameters
+        ----------
+        item : Any
+            Item to be added to the queue.
+        """
+        heapq.heappush(self.__items, (self.__priority_function(item), item))
+
+    def pop(self) -> Item:
+        """Pops the first element in the queue, removing it from the internal, heapified list.
+
+        Returns
+        -------
+        tuple[float, Any]
+            Tuple which holds the item's priority and the item itself.
+        """
+        return heapq.heappop(self.__items)
+
+    def top(self) -> Any:
+        """Returns the first element in the queue, does not remove it from internal, heapified list
+
+        Returns
+        -------
+        Any
+            An item.
+        """
+        return self.__items[0][1]
 
 
 class Graph:
@@ -23,7 +85,8 @@ class Graph:
     directed : bool
         Whether the graph is directed or undirected.
     """
-    def __init__(self, connections: Sequence[tuple[Any, Any, Optional[float]]], directed: bool = False) -> None:
+
+    def __init__(self, connections: Connections, directed: bool = False) -> None:
         self.__graph_dict = defaultdict(set)
         self.__directed = directed
         self.__create_graph_dict(connections)
@@ -43,7 +106,7 @@ class Graph:
         return set(self.__graph_dict.keys()).union(set([t[0] for v in self.__graph_dict.values() for t in v])) \
             if self.__directed else set(self.__graph_dict.keys())
 
-    def get_edges(self, vertex: Any) -> set[tuple[Any, float]]:
+    def get_edges(self, vertex: Any) -> Edges:
         """Returns the edges originating from the provided vertex.
 
         Parameters
@@ -59,7 +122,7 @@ class Graph:
         """
         return self.__graph_dict.get(vertex, set())
 
-    def __create_graph_dict(self, connections: Sequence[tuple[Any, Any, Optional[float]]]) -> None:
+    def __create_graph_dict(self, connections: Connections) -> None:
         """Creates the internal dictionary backing this implementation.
 
         Based on whether the graph being built is directed or not, each connection is examined

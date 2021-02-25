@@ -96,4 +96,18 @@ class Node:
             yield Node(state=frontier_state, parent=self, action=a, path_cost=cost)
 
 
-cutoff = Node(state="cutoff")
+def join_nodes(direction: str, nodes: tuple[Node, Node]) -> Node:
+    n_f, n_b = nodes if direction == "F" else nodes[::-1]
+
+    join_node = n_f
+
+    while n_b.parent is not None:
+        cost = join_node.path_cost + n_b.path_cost - n_b.parent.path_cost
+        join_node = Node(n_b.parent.state, join_node, n_b.parent.action, cost)
+        n_b = n_b.parent
+
+    return join_node
+
+
+cutoff = Node(state="cutoff", path_cost=math.inf)
+failure = Node(state="failure", path_cost=math.inf)

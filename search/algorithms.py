@@ -1,9 +1,10 @@
 import heapq
 from collections import deque
-from typing import Optional
+from typing import Optional, Callable
 
-from problem.node import Node, cutoff
+from problem.node import Node, cutoff, failure
 from problem.problem import Problem
+from search.helpers import proceed
 
 
 def best_first_search(problem: Problem) -> Optional[Node]:
@@ -20,7 +21,7 @@ def best_first_search(problem: Problem) -> Optional[Node]:
 
     Returns
     -------
-    problem.node.Node
+    Node
         Solution node, if the function finds one, else None.
     """
     node = Node(state=problem.initial_state)
@@ -58,7 +59,7 @@ def breadth_first_search(problem: Problem) -> Optional[Node]:
 
     Returns
     -------
-    problem.node.Node
+    Node
         Solution node, if the function finds one, else None.
     """
     node = Node(state=problem.initial_state)
@@ -94,7 +95,7 @@ def depth_first_search(problem: Problem) -> Optional[Node]:
 
     Returns
     -------
-    problem.node.Node
+    Node
         Solution node, if the function finds one, else None.
     """
     frontier = deque([Node(state=problem.initial_state)])
@@ -127,7 +128,7 @@ def depth_limited_search(problem: Problem, limit: int) -> Optional[Node]:
 
     Returns
     -------
-    problem.node.Node
+    Node
         Solution node, if the function finds one, if the depth of the problem's
         tree is larger than the provided limit, the function returns a cutoff node
         which means there might be a solution in a deeper level.
@@ -165,7 +166,7 @@ def iterative_deepening_search(problem: Problem) -> Optional[Node]:
 
     Returns
     -------
-    problem.node.Node
+    Node
         Solution node, if the function finds one, else None.
     """
     depth = 0
@@ -178,44 +179,41 @@ def iterative_deepening_search(problem: Problem) -> Optional[Node]:
         depth += 1
 
 
-def bidirectional_best_first_search(problem_f: Problem, problem_b: Problem) -> Optional[Node]:
-    def has_terminated(s: Optional[Node], f_f: list[(float, Node)], f_b: list[(float, Node)]) -> bool:
-        # Front and Back nodes, this has to be refactored. Maybe create a custom data structure.
-        f, b = f_f[0][1], f_b[0][1]
-        return s and f.path_cost + b.path_cost > s.path_cost
+def bidirectional_best_first_search(
+        problem_f: Problem,
+        evaluation_function_f: Callable[[Node], float],
+        problem_b: Problem,
+        evaluation_function_b: Callable[[Node], float],
+        has_terminated: Callable[[Node, list[(float, Node)], list[(float, Node)]], bool]) -> Node:
+    """Bidirectional best-first search implementation.
 
-    def join_nodes(direction, nodes: tuple[Node, Node]) -> Node:
-        f, b = nodes if direction == "F" else nodes[::-1]
+    This implementation is abstract in terms of it needing two evaluation functions and a function
+    to check for termination passed in.
+    The algorithm works by taking two problems, one in the forwards direction and one in the backwards.
+    It maintains two frontiers and two reached dictionaries for each direction.
+    The algorithm terminates when the two reached mappings have the same state in both of them.
+    This check, however, is done in the proceed helper function.
+    The algorithm needs the additional termination check for the cases where the evaluation functions are not the
+    path costs of nodes.
 
-        join_node = f
+    Parameters
+    ----------
+    problem_f : Problem
+        Problem in the forwards direction (Initial -> Goal)
+    evaluation_function_f : Callable[[Node], float]
+        Cost evaluation function for the forwards problem.
+    problem_b : Problem
+        Problem in the backwards direction (Goal -> Initial)
+    evaluation_function_b : Callable[[Node], float]
+        Cost evaluation function for the backwards problem.
+    has_terminated : Callable[[Node, list[(float, Node)], list[(float, Node)]], bool]
+        Function that check if the found solution is an optimal one.
 
-        while b.parent is not None:
-            cost = join_node.path_cost + b.path_cost - b.parent.path_cost
-            join_node = Node(b.parent.state, join_node, b.parent.action, cost)
-            b = b.parent
-
-        return join_node
-
-    def proceed(direction,
-                problem: Problem,
-                frontier: list[(float, Node)],
-                reached1: dict[str, Node],
-                reached2: dict[str, Node],
-                solution: Optional[Node]):
-        n = heapq.heappop(frontier)
-
-        for c in n.expand(problem):
-            state = c.state
-            if state not in reached1 or c.path_cost < reached1[state].path_cost:
-                reached1[state] = c
-                heapq.heappush(frontier, (c.path_cost, c))
-                if state in reached2:
-                    joined_solution = join_nodes(direction, (c, reached2[state]))
-                    if joined_solution.path_cost < solution.path_cost:
-                        solution = joined_solution
-
-        return solution
-
+    Returns
+    -------
+    Node
+        Solution node or failure.
+    """
     node_f = Node(problem_f.initial_state)
     node_b = Node(problem_b.initial_state)
 
@@ -227,12 +225,11 @@ def bidirectional_best_first_search(problem_f: Problem, problem_b: Problem) -> O
     reached_f = {}
     reached_b = {}
 
-    result = None
+    solution = failure
 
-    while not has_terminated(result, frontier_f, frontier_b):
-        if frontier_f[0][1].path_cost < frontier_b[0][1]:
-            result = (proceed("F", problem_f, frontier_f, reached_f, reached_b, result)
-                      if frontier_f[0][1].path_cost < frontier_b[0][1].path_cost
-                      else proceed("B", problem_b, frontier_b, reached_b, reached_f, result))
+    while not has_terminated(solution, frontier_f, frontier_b):
+        solution = (proceed("F", problem_f, frontier_f, reached_f, reached_b, solution)
+                    if evaluation_function_f(frontier_f[0][1]) < evaluation_function_b(frontier_b[0][1])
+                    else proceed("B", problem_b, frontier_b, reached_b, reached_f, solution))
 
-    return result
+    return solution

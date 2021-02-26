@@ -41,7 +41,7 @@ def best_first_search(problem: Problem, evaluation_function: EvaluationFunction)
         for c in n.expand(problem):
             if c.state not in reached or c.path_cost < reached[c.state].path_cost:
                 reached[c.state] = c
-                frontier.add(node)
+                frontier.add(c)
 
     return failure
 
@@ -156,7 +156,7 @@ def depth_limited_search(problem: Problem, limit: int) -> Node:
         which means there might be a solution in a deeper level.
         If there is no solution, the function returns failure.
     """
-    result = None
+    result = failure
 
     frontier = deque([Node(state=problem.initial_state)])
 

@@ -1,7 +1,8 @@
+from collections import deque
 from typing import Callable
 
 from datastructures import PriorityQueue
-from problem.node import Node, failure
+from problem.node import Node, failure, cutoff
 from problem.problem import Problem
 from search.helpers import path_cost_evaluation_function, proceed
 
@@ -12,16 +13,15 @@ HasTerminated = Callable[[Node, PriorityQueue, PriorityQueue], bool]
 def best_first_search(problem: Problem, evaluation_function: EvaluationFunction) -> Node:
     """Best-first search implementation.
 
-    A general implementation of the best-first search algorithm, specifying different evaluation functions
-    provide different algorithms.
+    A general implementation of the best-first search algorithm,
+    specifying different evaluation functions provides different algorithms.
 
     Parameters
     ----------
     problem : Problem
         Problem, which the algorithm searches.
     evaluation_function: Callable[[Node], float]
-        Function calculating the cost of each node.
-        It is used in terms of the priority queue backing the algorithm.
+        Function calculating the cost of each node. It is used to order the priority queue backing the algorithm.
 
     Returns
     -------
@@ -66,6 +66,141 @@ def uniform_cost_search(problem: Problem) -> Node:
     return best_first_search(problem, path_cost_evaluation_function)
 
 
+def breadth_first_search(problem: Problem) -> Node:
+    """Breadth-first search implementation.
+
+    Relies on the dequeue data structure for its FIFO queue needs.
+    Goal checking happens immediately after the while loop reaches a node.
+    Contrast this with best-first search which performs a late goal test,
+    after a node is popped from its priority queue.
+
+    Parameters
+    ----------
+    problem : Problem
+        The problem which this implementation searches.
+
+    Returns
+    -------
+    Node
+        Solution node or failure.
+    """
+    node = Node(state=problem.initial_state)
+
+    if problem.is_goal(node.state):
+        return node
+
+    frontier = deque([node])
+    reached = {node.state}
+
+    while frontier:
+        n = frontier.popleft()
+
+        for e in n.expand(problem):
+            if problem.is_goal(e.state):
+                return e
+            if e.state not in reached:
+                reached.add(e.state)
+                frontier.append(e)
+
+    return failure
+
+
+def depth_first_search(problem: Problem) -> Node:
+    """Depth-first search implementation.
+
+    Relies on the dequeue data structure for its need of a LIFO queue.
+
+    Parameters
+    ----------
+    problem: Problem
+        The problem which this implementation searches.
+
+    Returns
+    -------
+    Node
+        Solution node or failure.
+    """
+    frontier = deque([Node(state=problem.initial_state)])
+
+    while frontier:
+        node = frontier.pop()
+
+        if problem.is_goal(node.state):
+            return node
+
+        frontier.extend([n for n in node.expand(problem)])
+
+    return failure
+
+
+def depth_limited_search(problem: Problem, limit: int) -> Node:
+    """Depth-limited search implementation.
+
+    The algorithm treats nodes at depth == limit as if they have no children.
+    It is important to notice that if the deepest level of the tree is, for example, 3,
+    calling this function with limit = 3 will return the cutoff node.
+
+    Parameters
+    ----------
+    problem : Problem
+        The problem which this implementation searches.
+    limit : int
+        Depth limit, if a node is in a larger depth than this limit,
+        the algorithm treats it like it doesn't have any children.
+
+    Returns
+    -------
+    Node
+        Solution node, if the function finds one, if the depth of the problem's
+        tree is larger than the provided limit, the function returns a cutoff node
+        which means there might be a solution in a deeper level.
+        If there is no solution, the function returns failure.
+    """
+    result = None
+
+    frontier = deque([Node(state=problem.initial_state)])
+
+    while frontier:
+        node = frontier.pop()
+
+        if problem.is_goal(node.state):
+            return node
+        elif node.depth >= limit:
+            result = cutoff
+        elif not node.is_cycle():
+            frontier.extend([n for n in node.expand(problem)])
+
+    return result
+
+
+def iterative_deepening_search(problem: Problem) -> Node:
+    """Iterative-deepening search implementation.
+
+    Calls depth-limited search with an ever increasing limit,
+    until either a solution is found or the algorithm returns None
+    because no solution exists.
+
+
+    Parameters
+    ----------
+    problem : Problem
+        The problem which this implementation searches.
+
+    Returns
+    -------
+    Node
+        Solution node, if the function finds one, else None.
+    """
+    depth = 0
+
+    while True:
+        node = depth_limited_search(problem, depth)
+
+        if node != cutoff:
+            return node
+        depth += 1
+
+
 def bidirectional_best_first_search(
         problem_f: Problem,
         evaluation_function_f: EvaluationFunction,
@@ -74,14 +209,15 @@ def bidirectional_best_first_search(
         has_terminated: HasTerminated) -> Node:
     """Bidirectional best-first search implementation.
 
-    This implementation is abstract in terms of it needing two evaluation functions and a function
-    to check for termination passed in.
-    The algorithm works by taking two problems, one in the forwards direction and one in the backwards.
+    Abstract implementation which has configurable behaviour.
+    Passing different evaluation and termination functions provides a different algorithm.
+
+    Works by taking two problems, one in the forwards direction and one in the backwards.
     It maintains two frontiers and two reached dictionaries for each direction.
     The algorithm terminates when the two reached mappings have the same state in both of them.
-    This check, however, is done in the proceed helper function.
-    The algorithm needs the additional termination check for the cases where the evaluation functions are not the
-    path costs of nodes.
+    This check is done in the proceed helper function.
+
+    Performs an extra termination check for the cases where the evaluation functions are not the path costs of nodes.
 
     Parameters
     ----------

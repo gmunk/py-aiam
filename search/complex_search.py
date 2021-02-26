@@ -1,8 +1,10 @@
 import random
 from typing import Sequence, Callable
 
+FitnessFunction = Callable[[str], float]
 
-def weight_by(population: Sequence[str], fitness_function: Callable[[str], float]) -> list[float]:
+
+def weight_by(population: Sequence[str], fitness_function: FitnessFunction) -> list[float]:
     """Calculates weights for the individuals of an evolutionary algorithms population.
 
     Parameters
@@ -91,7 +93,7 @@ def mutate(individual: str, genes: Sequence[str], mutation_rate: float) -> str:
 
 
 def genetic_algorithm(population: Sequence[str],
-                      fitness_function: Callable[[str], float],
+                      fitness_function: FitnessFunction,
                       genes: Sequence[str],
                       culling_threshold: float = None,
                       fitness_threshold: float = None,

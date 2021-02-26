@@ -49,17 +49,17 @@ Right now the code does not have any dependencies, if that changes, this guide w
 
 | **Algorithm / Data-structure**          | **Implementation** | **Test**                | **Location**                                             |
 | --------------------------------------- | ------------------ | ----------------------- | -------------------------------------------------------- |
-| Table Driven Agent                      | ✅                 | ✅                     | [`agent.py`][agent]                                      |
-| Reflex Vacuum Agent                     | ✅                 | ✅                     | [`agent.py`][agent]                                      |
-| Simple Reflex Agent                     | ✅                 | ✅                     | [`agent.py`][agent]                                      |
-| Best-first Search (Uniform-cost)        | ✅                 | ✅                     | [`search/uninformed_search.py`][uninformed_search]       |
-| Uniform-cost Search                     | ✅                 | ✅                     | [`search/uninformed_search.py`][uninformed_search]       |
-| Breadth-first Search                    | ✅                 | ✅                     | [`search/uninformed_search.py`][uninformed_search]       |
-| Depth-first Search                      | ✅                 | ✅                     | [`search/uninformed_search.py`][uninformed_search]       |
-| Depth-limited Search                    | ✅                 | ✅                     | [`search/uninformed_search.py`][uninformed_search]       |
-| Iterative-deepening Search              | ✅                 | ✅                     | [`search/uninformed_search.py`][uninformed_search]       |
-| Bidirectional best-first Search         | ✅                 | ❌                     | [`search/uninformed_search.py`][uninformed_search]       |
-| Genetic algorithm                       | ✅                 | ✅                     | [`search/complex_search.py`][complex_search]             |
+| Table Driven Agent                      | ✅                 | ✅                     | [agent.py](agent.py)                                      |
+| Reflex Vacuum Agent                     | ✅                 | ✅                     | [agent.py](agent.py)                                      |
+| Simple Reflex Agent                     | ✅                 | ✅                     | [agent.py](agent.py)                                      |
+| Best-first Search (Uniform-cost)        | ✅                 | ✅                     | [uninformed_search.py](search/uninformed_search.py)       |
+| Uniform-cost Search                     | ✅                 | ✅                     | [uninformed_search.py](search/uninformed_search.py)       |
+| Breadth-first Search                    | ✅                 | ✅                     | [uninformed_search.py](search/uninformed_search.py)       |
+| Depth-first Search                      | ✅                 | ✅                     | [uninformed_search.py](search/uninformed_search.py)       |
+| Depth-limited Search                    | ✅                 | ✅                     | [uninformed_search.py](search/uninformed_search.py)       |
+| Iterative-deepening Search              | ✅                 | ✅                     | [uninformed_search.py](search/uninformed_search.py)       |
+| Bidirectional best-first Search         | ✅                 | ❌                     | [uninformed_search.py](search/uninformed_search.py)       |
+| Genetic algorithm                       | ✅                 | ✅                     | [complex_search.py](search/complex_search.py)             |
 
 
 ## Tests

@@ -12,20 +12,54 @@ The plan is to go through the book and implement all the various algorithms and 
 the official codebase is occasionaly referenced to help development 
 but in general the code here is as unique as possible.
 
+## Requirements and Set-up guide
+The project requires **python 3**, it will **not work on python 2**, since python 2 is no longer supported that shouldn't be a
+big issue. The precise version that the project is being developed on is 3.9.1. This is a fairly recent one (in Q1/2021), 
+but it is possible that the code will work on older versions. There is a plan to test with other versions, when that happens
+this section will be updated.
+
+The following table shows which versions of python have been tested.
+
+| **Version** | **Status** |
+| ----------- | ---------- |
+| 3.9.1       | ✅         |
+
+The easiest and cleanest way to install 3.9.1 is to use **pyenv and pyenv-virtualenv**. After these two are installed,
+clone this repository and follow the steps below.
+
+Install python 3.9.1 with pyenv 
+
+`pyenv install 3.9.1`
+
+Create a new virtualenv, associated with the newly installed 3.9.1
+
+`pyenv virtualenv 3.9.1 py-aiam-3.9.1`
+
+Go to where you cloned this repository 
+
+`cd <where-this-repo-was-clonse>`
+
+Set the local version and environment for this folder.
+
+`pyenv local py-aiam-3.9.1`
+
+Right now the code does not have any dependencies, if that changes, this guide will be updated.
+
 ## Implemented Algorithms
 
-| Algorithm / Data-structure          | Implementation | Test                |
-| ----------------------------------- | -------------- | ------------------- |
-| Table Driven Agent                  | ✅             | ✅                 |
-| Reflex Vacuum Agent                 | ✅             | ✅                 |
-| Simple Reflex Agent                 | ✅             | ✅                 |
-| Best-first Search (Uniform-cost)    | ✅             | ✅                 |
-| Breadth-first Search                | ✅             | ✅                 |
-| Depth-first Search                  | ✅             | ✅                 |
-| Depth-limited Search                | ✅             | ✅                 |
-| Iterative-deepening Search          | ✅             | ✅                 |
-| Bidirectional best-first Search     | ✅             | ❌                 |
-| Genetic algorithm                   | ✅             | ✅                 |
+| **Algorithm / Data-structure**          | **Implementation** | **Test**                | **Location**                                             |
+| --------------------------------------- | ------------------ | ----------------------- | -------------------------------------------------------- |
+| Table Driven Agent                      | ✅                 | ✅                     | [`agent.py`][agent]                                      |
+| Reflex Vacuum Agent                     | ✅                 | ✅                     | [`agent.py`][agent]                                      |
+| Simple Reflex Agent                     | ✅                 | ✅                     | [`agent.py`][agent]                                      |
+| Best-first Search (Uniform-cost)        | ✅                 | ✅                     | [`search/uninformed_search.py`][uninformed_search]       |
+| Uniform-cost Search                     | ✅                 | ✅                     | [`search/uninformed_search.py`][uninformed_search]       |
+| Breadth-first Search                    | ✅                 | ✅                     | [`search/uninformed_search.py`][uninformed_search]       |
+| Depth-first Search                      | ✅                 | ✅                     | [`search/uninformed_search.py`][uninformed_search]       |
+| Depth-limited Search                    | ✅                 | ✅                     | [`search/uninformed_search.py`][uninformed_search]       |
+| Iterative-deepening Search              | ✅                 | ✅                     | [`search/uninformed_search.py`][uninformed_search]       |
+| Bidirectional best-first Search         | ✅                 | ❌                     | [`search/uninformed_search.py`][uninformed_search]       |
+| Genetic algorithm                       | ✅                 | ✅                     | [`search/complex_search.py`][complex_search]             |
 
 
 ## Tests

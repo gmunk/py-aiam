@@ -3,8 +3,8 @@ import unittest
 from datastructures import binary_tree, romania_road_map
 from problem.node import cutoff, failure
 from problem.problem import GraphProblem
-from search.uninformed_search_algorithms import (uniform_cost_search, depth_limited_search, depth_first_search,
-                                                 breadth_first_search, iterative_deepening_search)
+from search.uninformed_search import (uniform_cost_search, depth_limited_search, depth_first_search,
+                                      breadth_first_search, iterative_deepening_search)
 
 
 class TestSearchAlgorithms(unittest.TestCase):

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Callable, Any
 
 
 @dataclass(frozen=True, eq=True)
@@ -7,36 +8,41 @@ class VacuumPerception:
     status: str = None
 
 
-def create_table_driven_agent_program(table):
+AgentProgram = Callable[[Any], str]
+ParsePerception = Callable[[Any], Any]
+Rules = dict[Any, str]
+MatchRule = Callable[[Any, Rules], str]
+
+
+def create_table_driven_agent_program(table: dict[tuple, str]) -> AgentProgram:
     """Creates an implementation of a table-driven agent program.
 
     Parameters
     ----------
-    table : dict
-        A dictionary of perception sequence to action mappings.
+    table : dict[tuple, str]
+        Dictionary of tuple to action description mappings. The tuples represent perception sequences.
 
     Returns
     -------
-    function
-        A callable implementation of a table-driven agent program.
+    Callable[[Any], str]
+        Callable implementation of a table-driven agent program.
     """
     perception_sequence = []
 
-    def execute(perception):
+    def execute(perception: Any) -> str:
         """Executes the table-driven agent program.
 
-        The function uses a tuple representation of the persistent perception sequence to reference
-        a table of mappings.
+        Uses a tuple representation of the persistent perception sequence to reference a table of mappings.
 
         Parameters
         ----------
-        perception : obj
-            A representation of a perception.
+        perception : Any
+            Representation of a perception.
 
         Returns
         -------
         str
-            A description of an action.
+            Description of an action.
         """
         perception_sequence.append(perception)
 
@@ -45,27 +51,27 @@ def create_table_driven_agent_program(table):
     return execute
 
 
-def create_reflex_vacuum_agent_program():
-    """Creates a specific reflex agent that mimics a vacuum cleaner.
+def create_reflex_vacuum_agent_program() -> AgentProgram:
+    """Creates reflex agent, mimicking a vacuum cleaner.
 
     Returns
     -------
-    function
-        A callable implementation of a reflex vacuum agent program.
+    Callable[[Any], str]
+        Callable implementation of a reflex vacuum agent program.
     """
 
-    def execute(perception):
+    def execute(perception: Any) -> str:
         """Executes the reflex vacuum agent program.
 
         Parameters
         ----------
-        perception : obj
-            A representation of a perception.
+        perception : Any
+            Representation of a perception.
 
         Returns
         -------
         str
-            A description of an action.
+            Description of an action.
         """
         return "Suck" if perception.status == "Dirty" \
             else "Right" if perception.location == "A" \
@@ -75,44 +81,70 @@ def create_reflex_vacuum_agent_program():
     return execute
 
 
-def parse_vacuum_perception(perception):
+def parse_vacuum_perception(perception: VacuumPerception) -> str:
+    """Parses a vacuum agent's perception of the current state of the vacuum world.
+
+    Parameters
+    ----------
+    perception : VacuumPerception
+        Perception of the vacuum world. Includes a location and its status.
+
+    Returns
+    -------
+    str
+        Description of the current state of the vacuum world. Used to feed a condition-action mechanism.
+    """
     return "Is {}".format(perception.status) if perception.status == "Dirty"\
         else "Is Clean {}".format(perception.location)
 
 
-def match_vacuum_rule(state, rules):
+def match_vacuum_rule(state: Any, rules: Rules) -> str:
+    """Matches a state to an action in the vacuum world where a simple reflex vacuum agent will work.
+
+    Parameters
+    ----------
+    state : Any
+        Vacuum world state.
+    rules : dict[Any, str]
+        Condition-action rules for the vacuum world.
+
+    Returns
+    -------
+    str
+        Action which the simple reflex vacuum agent should take next.
+    """
     return rules.get(state)
 
 
-def create_simple_reflex_agent(rules, parse_perception, match_rule):
+def create_simple_reflex_agent(rules: Rules, parse_perception: ParsePerception, match_rule: MatchRule) -> AgentProgram:
     """Creates a generalized reflex agent based on condition-action rules.
 
     Parameters
     ----------
-    rules : dict
-        A mapping of rules, it provides an appropriate action for each valid state the agent might be in.
-    parse_perception : function
-        A function that parses a perception to a description of a state.
-    match_rule : function
-        A function that matches a state description to an action.
+    rules : dict[Any, str]
+        Mapping of rules, it provides an appropriate action for each valid state the agent might be in.
+    parse_perception : Callable[[Any], Any]
+        Callable that parses a perception and returns a description of a state.
+    match_rule : Callable[[Any, Rules], str]
+        Function that matches a state description to an action.
 
     Returns
     -------
-    function
-        A callable implementation of a generalized reflex agent program.
+    Callable[[Any], str]
+        Callable implementation of a generalized reflex agent program.
     """
-    def execute(perception):
+    def execute(perception: Any) -> str:
         """Executes the generalized reflex agent program.
 
         Parameters
         ----------
-        perception : dtype
-            A representation of a perception.
+        perception : Any
+            Representation of a perception.
 
         Returns
         -------
         str
-            A description of an action.
+            Description of an action.
         """
         return match_rule(parse_perception(perception), rules)
 
